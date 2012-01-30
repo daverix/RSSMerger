@@ -1,0 +1,20 @@
+<?php 
+require_once "class_rssmerge.php";
+require_once "class_rssfeed.php";
+
+$rss = new RSSMerger();
+$rss->add("http://daverix.net/blog.rss");
+$rss->add("http://www.laurells.net/feed.xml");
+$rss->add("http://trains.laurells.net/feed.xml");
+$rss->sort();
+
+$xml = new RSSFeed("RSS merger","http://daverix.net/rssm/","a simple rss merge script","http://".$_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
+$xml->setLanguage("en");
+
+$feeds = $rss->getFeeds(20);
+
+foreach($feeds as $f) {
+    $xml->addItem($f->title,$f->link,$f->description,$f->author,$f->guid,$f->time);
+}
+$xml->displayXML();
+?>
